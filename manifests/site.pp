@@ -4,6 +4,6 @@ notify{"hostname= ${hostname}": }
 
 node default {
   
-  include pih_java
-  include pih_tomcat
+  include pih_java  
+  include newrelic
 }
