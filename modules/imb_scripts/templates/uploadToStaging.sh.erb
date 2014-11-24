@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Uploads the current backup to the staging server
+
+SERVER_NAME=$(hostname)
+LOWER_SERVER_NAME=$(echo "$SERVER_NAME" | tr '[:upper:]' '[:lower:]')
+echo "lowercase server name= $LOWER_SERVER_NAME"
+REMOTE_FOLDER="/home/openmrs/backups/rwink/$LOWER_SERVER_NAME"
+echo "remote folder location= $REMOTE_FOLDER"
+
+
+ssh -p 85 openmrs@197.243.32.206 "mkdir -p $REMOTE_FOLDER"
+scp -P 85 ../current/$LOWER_SERVER_NAME-openmrs-dump.sql.gz openmrs@197.243.32.206:$REMOTE_FOLDER/$LOWER_SERVER_NAME/

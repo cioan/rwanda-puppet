@@ -1,0 +1,62 @@
+filter {
+ grep {
+  add_field => ["event_type", "ERROR"]
+  add_tag => ['error']
+  match => ["@message", "ERROR"]
+  drop => false
+  type => "tomcat"
+ }
+
+ grep {
+  add_field => ["event_type", "WARN"]
+  add_tag => ['warning']
+  match => ["@message", "WARN"]
+  drop => false
+  type => "tomcat"
+ }
+
+ multiline {
+  pattern => "^[^\s]+Exception"
+  type => "tomcat"
+  what => "previous"
+ }
+
+ multiline {
+  pattern => "^\t"
+  type => "tomcat"
+  what => "previous"
+ }
+
+ multiline {
+  pattern => "^Caused by"
+  type => "tomcat"
+  what => "previous"
+ }
+
+ 
+}
+
+input {
+
+ file {
+  path => ['/var/log/*.log', '/var/log/messages', '/var/log/syslog']
+  type => "syslog"
+ }
+
+ file {
+  path => ["<%= @tomcat_home %>/logs/catalina.out"]
+  type => "tomcat"
+ }
+
+}
+
+output {
+ email {
+  body => "%{@message}"
+  match => ["error", "event_type,ERROR"]
+  subject => "%{@source_host} : OpenMRS errors"
+  to => "<%= @email_alerts_to %>"
+  via => "sendmail"
+  type => "tomcat"
+ }
+}

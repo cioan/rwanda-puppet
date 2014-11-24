@@ -1,0 +1,3 @@
+class imb_scripts{
+	
+}
