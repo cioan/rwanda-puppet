@@ -36,12 +36,6 @@ git clone https://github.com/cioan/rwanda-puppet.git puppet
 
 ```
 
-Setup email
------------
-Modify hieradata/common.yaml with smtmp variables:
-* smtp_username
-* smtp_userpassword
-* email_alerts_to
 
 Run install
 -----------
