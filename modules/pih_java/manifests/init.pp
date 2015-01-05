@@ -8,6 +8,8 @@ class pih_java {
 
 	$java_home = "${opt_java}/${jdk_version}"
 
+	notify{"java_home= ${java_home}": }
+
 	file { $opt_java_dir:
 		ensure  => directory,
 	} -> 
