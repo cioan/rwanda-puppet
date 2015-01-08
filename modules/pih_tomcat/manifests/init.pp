@@ -14,10 +14,10 @@ class pih_tomcat (
   $dest_tomcat_zip = "${tomcat_parent}/${tomcat_zip}"
   $version = '6.0.36'
   $tomcat_home = "${tomcat_parent}/apache-tomcat-${version}"
+  $tomcat_base = "/var/lib/${tomcat}"
   $cleanup_script = "${tomcat_home}/bin/cleanup.sh"
 
 
-  notify{"java_home= ${java_home}": }
   notify{"tomcat_home= ${tomcat_home}": }
 
   user { $tomcat:
@@ -50,6 +50,22 @@ class pih_tomcat (
     owner   => $tomcat,
     group   => $tomcat,
     recurse => true,    
+  } ->
+
+  file { "${tomcat_base}":
+    ensure  => directory,
+    owner   => $tomcat,
+    group   => $tomcat,
+    mode    => '0755',    
+  } ->
+
+  file { "${tomcat_base}/common":
+    ensure  => directory,
+    owner   => $tomcat,
+    group   => $tomcat,
+    mode    => '0755',
+    source  => "${tomcat_home}/common/", 
+    recurse => true,   
   } ->
 
   file { "${tomcat_parent}/${tomcat}":
