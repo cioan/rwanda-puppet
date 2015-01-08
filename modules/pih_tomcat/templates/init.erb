@@ -26,7 +26,7 @@ PATH=/bin:/usr/bin:/sbin:/usr/sbin
 NAME=tomcat6
 DESC="Tomcat servlet engine"
 DEFAULT=/etc/default/$NAME
-JVM_TMP=/tmp/tomcat6-$NAME-tmp
+JVM_TMP=/tmp/tomcat6-tmp
 
 if [ `id -u` -ne 0 ]; then
 	echo "You need root privileges to run this script"
@@ -45,38 +45,15 @@ if [ -r /etc/default/rcS ]; then
 	. /etc/default/rcS
 fi
 
+
 # The following variables can be overwritten in $DEFAULT
 
 # Run Tomcat 6 as this user ID and group ID
 TOMCAT6_USER=<%= @tomcat %>
 TOMCAT6_GROUP=<%= @tomcat %>
 
-# this is a work-around until there is a suitable runtime replacement 
-# for dpkg-architecture for arch:all packages
-# this function sets the variable OPENJDKS
-find_openjdks()
-{
-        for jvmdir in /usr/lib/jvm/java-7-openjdk-*
-        do
-                if [ -d "${jvmdir}" -a "${jvmdir}" != "/usr/lib/jvm/java-7-openjdk-common" ]
-                then
-                        OPENJDKS=$jvmdir
-                fi
-        done
-        for jvmdir in /usr/lib/jvm/java-6-openjdk-*
-        do
-                if [ -d "${jvmdir}" -a "${jvmdir}" != "/usr/lib/jvm/java-6-openjdk-common" ]
-                then
-                        OPENJDKS="${OPENJDKS} ${jvmdir}"
-                fi
-        done
-}
-
 # The first existing directory is used for JAVA_HOME (if JAVA_HOME is not
 # defined in $DEFAULT)
-
-OPENJDKS=""
-find_openjdks
 JDK_DIRS="<%= @java_home %>"
 
 # Look for the right JVM to use
@@ -88,10 +65,10 @@ done
 export JAVA_HOME
 
 # Directory where the Tomcat 6 binary distribution resides
-CATALINA_HOME=/usr/local/tomcat6
+CATALINA_HOME=/usr/share/$NAME
 
 # Directory for per-instance configuration files and webapps
-CATALINA_BASE=/usr/local/tomcat6
+CATALINA_BASE=/var/lib/$NAME
 
 # Use the Java security manager? (yes/no)
 TOMCAT6_SECURITY=no
@@ -102,7 +79,7 @@ TOMCAT6_SECURITY=no
 # It also looks like the default heap size of 64M is not enough for most cases
 # so the maximum heap size is set to 128M
 if [ -z "$JAVA_OPTS" ]; then
-	JAVA_OPTS="-Djava.awt.headless=true -Xmx128M"
+	JAVA_OPTS="-Xmx1024m -Xms1024m -XX:PermSize=512m -XX:MaxPermSize=512m -XX:NewSize=256m"
 fi
 
 # End of variables that can be overwritten in $DEFAULT
@@ -116,6 +93,8 @@ if [ ! -f "$CATALINA_HOME/bin/bootstrap.jar" ]; then
 	log_failure_msg "$NAME is not installed"
 	exit 1
 fi
+
+POLICY_CACHE="$CATALINA_BASE/work/catalina.policy"
 
 if [ -z "$CATALINA_TMPDIR" ]; then
 	CATALINA_TMPDIR="$JVM_TMP"
@@ -194,6 +173,14 @@ case "$1" in
 	if start-stop-daemon --test --start --pidfile "$CATALINA_PID" \
 		--user $TOMCAT6_USER --exec "$JAVA_HOME/bin/java" \
 		>/dev/null; then
+
+		# Regenerate POLICY_CACHE file
+		umask 022
+		echo "// AUTO-GENERATED FILE from /etc/tomcat6/policy.d/" \
+			> "$POLICY_CACHE"
+		echo ""  >> "$POLICY_CACHE"
+		cat $CATALINA_BASE/conf/policy.d/*.policy \
+			>> "$POLICY_CACHE"
 
 		# Remove / recreate JVM_TMP directory
 		rm -rf "$JVM_TMP"

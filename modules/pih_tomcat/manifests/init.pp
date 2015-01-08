@@ -10,13 +10,15 @@ class pih_tomcat (
 
   $java_home = $pih_java::java_home
   $tomcat_zip = 'apache-tomcat-6.0.36.tar.gz'
-  $dest_tomcat_zip = "/usr/local/${tomcat_zip}"
+  $tomcat_parent = "/usr/share"
+  $dest_tomcat_zip = "${tomcat_parent}/${tomcat_zip}"
   $version = '6.0.36'
-  $tomcat_home = "/usr/local/apache-tomcat-${version}"
+  $tomcat_home = "${tomcat_parent}/apache-tomcat-${version}"
   $cleanup_script = "${tomcat_home}/bin/cleanup.sh"
 
 
   notify{"java_home= ${java_home}": }
+  notify{"tomcat_home= ${tomcat_home}": }
 
   user { $tomcat:
     ensure => 'present',
@@ -38,21 +40,21 @@ class pih_tomcat (
   } -> 
 
   exec { 'tomcat-unzip':
-    cwd     => '/usr/local',
+    cwd     => $tomcat_parent,
     command => "tar --group=${tomcat} --owner=${tomcat} -xzf ${dest_tomcat_zip}",
     unless  => "test -d ${tomcat_home}",   
   } ->
 
-  file { "/usr/local/apache-tomcat-${version}":
+  file { "${tomcat_home}":
     ensure  => directory,
     owner   => $tomcat,
     group   => $tomcat,
     recurse => true,    
   } ->
 
-  file { "/usr/local/${tomcat}":
+  file { "${tomcat_parent}/${tomcat}":
     ensure  => 'link',
-    target  => "/usr/local/apache-tomcat-${version}",
+    target  => "${tomcat_home}",
     owner   => $tomcat,
     group   => $tomcat,    
   } ->
@@ -75,8 +77,8 @@ class pih_tomcat (
   } ->
 
   file { "/etc/logrotate.d/${tomcat}":
-    ensure  => file,
-    source  => "puppet:///modules/pih_tomcat/logrotate",
+    ensure  => file,    
+    content => template("pih_tomcat/logrotate.erb"),
   } ->
 
   exec { 'cleanup_tomcat':
