@@ -171,14 +171,6 @@ class pih_tomcat (
     content => template("pih_tomcat/logrotate.erb"),
   } ->
 
-  exec { 'cleanup_tomcat':
-    cwd     => "${tomcat_home}/bin",
-    command => "${cleanup_script}",    
-    logoutput => true, 
-    returns   => [0, 1, 2],
-    timeout => 0, 
-  } ->
-
   service { $tomcat:
     enable  => $services_enable,
     ensure  => running,
