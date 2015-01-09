@@ -151,7 +151,7 @@ class pih_tomcat (
   
   file { $cleanup_script:
     ensure  => file,
-    source  => template("pih_tomcat/cleanup.sh.erb"),
+    content => template("pih_tomcat/cleanup.sh.erb"),
     mode    => '0755',
   } -> 
 
