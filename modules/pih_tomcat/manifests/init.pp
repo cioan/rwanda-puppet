@@ -63,10 +63,25 @@ class pih_tomcat (
     ensure  => directory,
     owner   => $tomcat,
     group   => $tomcat,
-    mode    => '0755',
-    source  => "${tomcat_home}/common/", 
+    mode    => '0755',    
     recurse => true,   
   } ->
+
+  file { "${tomcat_base}/server":
+    ensure  => directory,
+    owner   => $tomcat,
+    group   => $tomcat,
+    mode    => '0755',    
+    recurse => true,   
+  } ->
+
+  file { "${tomcat_base}/shared":
+    ensure  => directory,
+    owner   => $tomcat,
+    group   => $tomcat,
+    mode    => '0755',    
+    recurse => true,   
+  } ->  
 
   file { "${tomcat_parent}/${tomcat}":
     ensure  => 'link',
