@@ -83,6 +83,15 @@ class pih_tomcat (
     recurse => true,   
   } ->  
 
+  file { "${tomcat_base}/conf":
+    ensure  => directory,
+    owner   => $tomcat,
+    group   => $tomcat,
+    mode    => '0755',    
+    source  => "${tomcat_home}/conf/",
+    recurse => true,   
+  } ->    
+
   file { "${tomcat_parent}/${tomcat}":
     ensure  => 'link',
     target  => "${tomcat_home}",
