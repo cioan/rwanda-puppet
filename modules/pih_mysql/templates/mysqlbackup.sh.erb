@@ -1,0 +1,44 @@
+#!/bin/sh
+#
+# MDRTB Server Backup Script
+#
+
+SSH_KEYS_PARAMS="-o IdentityFile=/etc/puppet/keys/id_rsa -o UserKnownHostsFile=~/.ssh/known_hosts -o PasswordAuthentication=no"
+
+USER='<%= @backup_user %>'
+PASS='<%= @backup_password %>'
+DIR=/home/<%= @tomcat %>/backups
+
+REMOTE_USERNAME='<%= @remote_db_user %>'
+REMOTE_SERVER='<%= @remote_db_server %>'
+REMOTE_BACKUP_DIR='<%= @remote_backup_dir %>'
+
+CONNECT_TO_SERVER="ssh $SSH_KEYS_PARAMS $REMOTE_USERNAME@$REMOTE_SERVER"
+
+REMOTE_DB="$REMOTE_USERNAME@$REMOTE_SERVER:$REMOTE_BACKUP_DIR"
+
+$CONNECT_TO_SERVER "mkdir -p ${REMOTE_BACKUP_DIR}"
+
+if [ -n "$1" ]
+then
+  MODIFIER=release_$1
+else
+  MODIFIER=`date +%Y%m%d-%H%M%S`
+fi
+
+FILENAME=<%= @hostname %>_backup_${MODIFIER}.sql.7z
+CURRENT_FILENAME=<%= @hostname %>_current_backup.sql.7z
+
+# create the needed directories
+mkdir -p ${DIR}/current
+mkdir -p ${DIR}/sequences
+
+# Dump database, encrypt and compress
+mysqldump -u${USER} -p${PASS} --opt --flush-logs --single-transaction <%= @openmrs_db %> | 7z a -p${PASS} -si -t7z ${DIR}/sequences/${FILENAME} -mx9
+
+# link the current to the latest dump
+rm -f ${DIR}/current/${CURRENT_FILENAME}
+ln -s ${DIR}/sequences/${FILENAME} ${DIR}/current/${CURRENT_FILENAME}
+
+# Copy backup to remote location
+scp $SSH_KEYS_PARAMS ${DIR}/current/${CURRENT_FILENAME} ${REMOTE_DB}/${FILENAME}
