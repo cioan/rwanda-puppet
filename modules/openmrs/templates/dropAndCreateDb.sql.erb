@@ -1,0 +1,3 @@
+DROP DATABASE IF EXISTS <%= @openmrs_db %>;
+CREATE DATABASE <%= @openmrs_db %> DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
+GRANT ALL ON <%= @openmrs_db %>.* TO '<%= @openmrs_db_user %>'@'localhost' IDENTIFIED BY '<%= @openmrs_db_password %>';

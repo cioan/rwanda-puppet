@@ -1,0 +1,45 @@
+#! /bin/bash
+
+# ====================================================================================
+echo "Set Db connection properties"
+# ====================================================================================
+MYSQL_CLIENT="mysql"
+LOCAL_OPENMRS_DB_USER="root"
+LOCAL_OPENMRS_DB_PASSWORD=<%= @mysql_root_password %>
+OPENMRS_DB=<%= @openmrs_db %>
+DROP_AND_CREATE_DB_SCRIPT=<%= @openmrs_create_db_sql %>
+OPENMRS_DUMP_SQL=<%= @openmrs_dump_sql %>
+DELETE_SYNC_TABLES_DB_SCRIPT=<%= @delete_sync_tables_sql %>
+
+
+LOCAL_DB_CREDENTIALS="-u $LOCAL_OPENMRS_DB_USER -p$LOCAL_OPENMRS_DB_PASSWORD"
+
+# drop and recreate local DB 
+echo "Drop and re-create local DB"
+$MYSQL_CLIENT $LOCAL_DB_CREDENTIALS < $DROP_AND_CREATE_DB_SCRIPT
+if [ "$?" = "0" ]; then
+	echo "OpenMRS db has been recreated"
+else
+	echo "Failed to recreate the OpenMRS DB" 1>&2
+	exit 1
+fi
+
+# import parent db into the local server 
+echo "Import parent DB"
+$MYSQL_CLIENT $LOCAL_DB_CREDENTIALS $OPENMRS_DB < $OPENMRS_DUMP_SQL
+if [ "$?" = "0" ]; then
+	echo "OpenMRS db has been imported"
+else
+	echo "Failed to import OpenMRS DB" 1>&2
+	exit 1
+fi
+
+# delete sync tables from the local server 
+echo "Delete sync tables"
+$MYSQL_CLIENT $LOCAL_DB_CREDENTIALS $OPENMRS_DB < $DELETE_SYNC_TABLES_DB_SCRIPT
+if [ "$?" = "0" ]; then
+	echo "sync tables have been deleted"
+else
+	echo "Failed to delete sync tables" 1>&2
+	exit 1
+fi
