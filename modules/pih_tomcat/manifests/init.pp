@@ -107,6 +107,14 @@ class pih_tomcat (
     unless  => "test -d ${tomcat_base}/conf/policy.d",   
   } ->
 
+  file { "${tomcat_base}/conf/policy.d":
+    ensure  => directory,
+    owner   => $tomcat,
+    group   => $tomcat,
+    mode    => '0755',        
+    recurse => true,   
+  } ->  
+
   file { "${tomcat_base}/logs":
     ensure  => directory,
     owner   => $tomcat,
