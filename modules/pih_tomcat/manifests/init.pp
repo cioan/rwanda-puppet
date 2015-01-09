@@ -10,14 +10,17 @@ class pih_tomcat (
 
   $java_home = $pih_java::java_home
   $tomcat_zip = 'apache-tomcat-6.0.36.tar.gz'
+
   $tomcat_parent = "/usr/share"
   $dest_tomcat_zip = "${tomcat_parent}/${tomcat_zip}"
   $version = '6.0.36'
   $tomcat_home = "${tomcat_parent}/apache-tomcat-${version}"
-  $tomcat_base = "/var/lib/${tomcat}"
   $cleanup_script = "${tomcat_home}/bin/cleanup.sh"
 
-
+  $tomcat_base = "/var/lib/${tomcat}"
+  $policy_d_zip = 'policy.d.tar.gz'
+  $dest_policy_d_zip = "${tomcat_base}/conf/${policy_d_zip}"
+  
   notify{"tomcat_home= ${tomcat_home}": }
 
   user { $tomcat:
@@ -91,6 +94,45 @@ class pih_tomcat (
     source  => "${tomcat_home}/conf/",
     recurse => true,   
   } ->    
+
+  file { $dest_policy_d_zip:
+    ensure  => file,
+    source  => "puppet:///modules/pih_tomcat/${policy_d_zip}",    
+    mode    => '0755',
+  } -> 
+
+  exec { 'policy-d-unzip':
+    cwd     => "${tomcat_base}/conf",
+    command => "tar --group=${tomcat} --owner=${tomcat} -xzf ${dest_policy_d_zip}",
+    unless  => "test -d ${tomcat_base}/conf/policy.d",   
+  } ->
+
+  file { "${tomcat_base}/logs":
+    ensure  => directory,
+    owner   => $tomcat,
+    group   => $tomcat,
+    mode    => '0755',    
+    source  => "${tomcat_home}/logs/",
+    recurse => true,   
+  } ->   
+
+  file { "${tomcat_base}/webapps":
+    ensure  => directory,
+    owner   => $tomcat,
+    group   => $tomcat,
+    mode    => '0755',    
+    source  => "${tomcat_home}/webapps/",
+    recurse => true,   
+  } ->
+
+  file { "${tomcat_base}/work":
+    ensure  => directory,
+    owner   => $tomcat,
+    group   => $tomcat,
+    mode    => '0755',    
+    source  => "${tomcat_home}/work/",
+    recurse => true,   
+  } ->        
 
   file { "${tomcat_parent}/${tomcat}":
     ensure  => 'link',
