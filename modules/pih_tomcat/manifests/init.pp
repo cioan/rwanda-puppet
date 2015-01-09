@@ -151,7 +151,7 @@ class pih_tomcat (
   
   file { $cleanup_script:
     ensure  => file,
-    source  => "puppet:///modules/pih_tomcat/cleanup.sh",    
+    source  => template("pih_tomcat/cleanup.sh.erb"),
     mode    => '0755',
   } -> 
 
@@ -170,13 +170,17 @@ class pih_tomcat (
     ensure  => file,    
     content => template("pih_tomcat/logrotate.erb"),
   } ->
-
-  service { $tomcat:
-    enable  => $services_enable,
-    ensure  => running,
-  } ->
   
   package { 'sysv-rc-conf' :
     ensure => 'installed'
+  } -> 
+
+  exec { 'cleanup_tomcat':
+    cwd     => "${tomcat_home}/bin",
+    command => "${cleanup_script}",    
+    logoutput => true, 
+    returns   => [0, 1, 2],
+    timeout => 0, 
   } 
+
 }

@@ -1,0 +1,8 @@
+#! /bin/bash
+service tomcat6 stop
+rm -rf <%= @tomcat_base %>/conf/Catalina/localhost/openmrs.xml
+rm -rf <%= @tomcat_base %>/logs/*.*
+rm -rf <%= @tomcat_home %>/temp/*
+rm -rf <%= @tomcat_base %>/webapps/openmrs
+rm -rf <%= @tomcat_base %>/work/Catalina
+service tomcat6 start
