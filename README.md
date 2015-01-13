@@ -40,5 +40,6 @@ git clone https://github.com/cioan/rwanda-puppet.git puppet
 Run install
 -----------
 ```
+cd /etc/puppet
 ./install.sh
 ```
