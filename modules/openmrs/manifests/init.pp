@@ -27,7 +27,6 @@ class openmrs (
   $dest_modules_tar = "${openmrs_folder}/${modules_tar}"
   $dest_openmrs_war = "${tomcat_base}/webapps/openmrs.war"
 
-  notify{"tomcat_home= ${tomcat_home}": }
   notify{"tomcat_base= ${tomcat_base}": }
   notify{"tomcat= ${tomcat}": }
 
