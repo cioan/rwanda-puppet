@@ -8,6 +8,7 @@ class pih_tomcat (
 
   require pih_java
 
+  $tomcat_user_home_dir="/home/${tomcat}"
   $java_home = $pih_java::java_home
   $tomcat_zip = 'apache-tomcat-6.0.36.tar.gz'
 
@@ -25,11 +26,11 @@ class pih_tomcat (
 
   user { $tomcat:
     ensure => 'present',
-    home   => "/home/${tomcat}",
+    home   => "${tomcat_user_home_dir}",
     shell  => '/bin/sh',
   } ->
 
-  file { "/home/${tomcat}":
+  file { "/home/${tomcat_user_home_dir}":
     ensure  => directory,
     owner   => $tomcat,
     group   => $tomcat,

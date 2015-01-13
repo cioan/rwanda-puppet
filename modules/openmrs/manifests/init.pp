@@ -13,6 +13,7 @@ class openmrs (
 
   $tomcat_home = $pih_tomcat::tomcat_home
   $tomcat_base = $pih_tomcat::tomcat_base
+  $tomcat_user_home_dir = $pih_tomcat::tomcat_user_home_dir
 
   $openmrs_folder = "${tomcat_home}/.OpenMRS"
   $openmrs_db_folder = "${openmrs_folder}/db"
@@ -36,6 +37,11 @@ class openmrs (
     group   => $tomcat,
     mode    => '0755',
     require => User[$tomcat]
+  } ->
+
+  file { "${tomcat_user_home_dir}/.OpenMRS":
+    ensure => link,
+    target => "${openmrs_folder}",  
   } ->
 
   file { $openmrs_db_folder:

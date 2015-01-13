@@ -6,7 +6,7 @@ class pih_mysql {
 	
 
 	$mysql_home = "/usr/local/mysql"
-	$mysql_tar = "mysql-5.6.20.tar.gz"
+	$mysql_tar = "mysql-5.6.15.tar.gz"
 	$mysql_dest = "/usr/local/${mysql_tar}"
 
 	$reset_mysql_password_sh = "${mysql_home}/reset_mysql_password.sh"
