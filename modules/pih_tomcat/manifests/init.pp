@@ -172,6 +172,11 @@ class pih_tomcat (
     content => template("pih_tomcat/logrotate.erb"),
   } ->
   
+  service { $tomcat:
+    enable  => $services_enable,
+    ensure  => stopped,
+  } ->
+
   package { 'sysv-rc-conf' :
     ensure => 'installed'
   } -> 
