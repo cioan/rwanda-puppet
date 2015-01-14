@@ -30,7 +30,7 @@ class pih_tomcat (
     shell  => '/bin/sh',
   } ->
 
-  file { "/home/${tomcat_user_home_dir}":
+  file { "${tomcat_user_home_dir}":
     ensure  => directory,
     owner   => $tomcat,
     group   => $tomcat,
