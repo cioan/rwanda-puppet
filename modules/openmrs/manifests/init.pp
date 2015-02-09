@@ -48,39 +48,6 @@ class openmrs (
     ensure  => directory,    
   } ->
 
-  file { $dest_openmrs_db:
-    ensure  => file,    
-    source  => "puppet:///modules/openmrs/${openmrs_db_tar}",        
-  } -> 
-
-  exec { 'openmrs-db-unzip':
-    cwd     => $openmrs_db_folder,
-    command => "tar -xzf ${dest_openmrs_db}",    
-  } -> 
-
-  file { $openmrs_create_db_sql: 
-    ensure  => present,  
-    content => template('openmrs/dropAndCreateDb.sql.erb'), 
-  } ->
-
-  file { $delete_sync_tables_sql: 
-    ensure  => present,    
-    source  => "puppet:///modules/openmrs/deleteSyncTables.sql",
-  } ->   
-
-  file { $restore_openmrs_db_sh: 
-    ensure  => present,  
-    content => template('openmrs/restoreOpenMRS-db.sh.erb'), 
-    mode    => '0755',
-  } ->
-
-  exec { 'recreate-and-import-openmrs-db':
-    cwd     => $openmrs_db_folder,
-    command => "${restore_openmrs_db_sh}",    
-    logoutput => true, 
-    timeout => 0, 
-  } ->
-
   file { $dest_modules_tar:
     ensure  => file,
     owner   => $tomcat,
@@ -108,15 +75,6 @@ class openmrs (
     mode    => '0755',
     owner   => $tomcat,
     group   => $tomcat,
-  } -> 
-
-  file { $runtime_properties_file:
-    ensure  => present,
-    content => template('openmrs/openmrs-runtime.properties.erb'),
-    owner   => $tomcat,
-    group   => $tomcat,
-    mode    => '0644',    
-  }
-
+  } 
 
 }
