@@ -41,5 +41,7 @@ Run install
 -----------
 ```
 cd /etc/puppet
+git checkout CLEAN-INSTALL
+**COPY THE BINARIES INTO THE /etc/puppet/modules/[MODULE_NAME/files/***
 ./install.sh
 ```
