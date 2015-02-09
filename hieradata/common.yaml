@@ -5,3 +5,24 @@ java_memory_parameters: '-Xmx512m -Xms512m -XX:PermSize=256m -XX:MaxPermSize=256
 java_debug_parameters: ''
 java_profiler: ''
 
+tomcat_home: '/usr/share/tomcat6'
+
+mysql_sys_user_group: mysql
+mysql_sys_user_name: mysql
+mysql_root_password: openmrs
+
+openmrs_db: openmrs
+openmrs_db_user: openmrs
+openmrs_db_password: openmrs
+openmrs_auto_update_database: true
+
+backup_db_user: backup
+backup_db_password: foo
+remote_db_user: backups
+remote_db_server: 
+remote_backup_dir: 
+
+# These need to be configured for email
+email_alerts_to: 
+smtp_username: 
+smtp_userpassword: 
