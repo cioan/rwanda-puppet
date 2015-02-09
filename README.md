@@ -33,15 +33,20 @@ cd /etc/
 
 apt-get install git
 git clone https://github.com/cioan/rwanda-puppet.git puppet
-
+cd /etc/puppet
+git checkout CLEAN-INSTALL
 ```
 
+Copy the binaries
+-----------
+```
+**COPY THE BINARIES INTO THE /etc/puppet/modules/[MODULE_NAME/files/***
+```
 
 Run install
 -----------
 ```
 cd /etc/puppet
 git checkout CLEAN-INSTALL
-**COPY THE BINARIES INTO THE /etc/puppet/modules/[MODULE_NAME/files/***
 ./install.sh
 ```
