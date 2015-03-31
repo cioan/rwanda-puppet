@@ -1,5 +1,9 @@
 class pih_tomcat (
     $tomcat = hiera('tomcat'),
+    $tomcat_port = hiera('tomcat_port'),
+    $tomcat_ssl_port = hiera('tomcat_ssl_port'),
+    $tomcat_shutdown_port = hiera('tomcat_shutdown_port'),
+    $tomcat_ajp_port = hiera('tomcat_shutdown_port'),    
     $services_enable = hiera('services_enable'),
     $java_memory_parameters = hiera('java_memory_parameters'),
     $java_profiler = hiera('java_profiler'),
@@ -10,13 +14,15 @@ class pih_tomcat (
 
   $tomcat_user_home_dir="/home/${tomcat}"
   $java_home = $pih_java::java_home
-  $tomcat_zip = 'apache-tomcat-6.0.36.tar.gz'
-
-  $tomcat_parent = "/usr/share"
-  $dest_tomcat_zip = "${tomcat_parent}/${tomcat_zip}"
   $version = '6.0.36'
-  $tomcat_home = "${tomcat_parent}/apache-tomcat-${version}"
+  $tomcat_zip = 'apache-tomcat-${version}.tar.gz'
+  
+  $tomcat_parent = "/usr/share"
+  $dest_tomcat_zip = "${tomcat_parent}/apache-${tomcat}-${version}.tar.gz"
+  
+  $tomcat_home = "${tomcat_parent}/apache-${tomcat}-${version}"
   $cleanup_script = "${tomcat_home}/bin/cleanup.sh"
+  $conf_server_xml = "${tomcat_home}/conf/server.xml"
 
   $tomcat_base = "/var/lib/${tomcat}"
   $policy_d_zip = 'policy.d.tar.gz'
@@ -154,6 +160,14 @@ class pih_tomcat (
     ensure  => file,
     content => template("pih_tomcat/cleanup.sh.erb"),
     mode    => '0755',
+  } -> 
+
+  file { $conf_server_xml:
+    ensure  => file,
+    content => template("pih_tomcat/server.xml.erb"),
+    owner   => $tomcat,
+    group   => $tomcat,   
+    mode    => '0600',
   } -> 
 
   file { "/etc/init.d/${tomcat}":

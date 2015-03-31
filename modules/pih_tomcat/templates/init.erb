@@ -23,10 +23,10 @@
 set -e
 
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
-NAME=tomcat6
+NAME=<%= @tomcat %>
 DESC="Tomcat servlet engine"
 DEFAULT=/etc/default/$NAME
-JVM_TMP=/tmp/tomcat6-tmp
+JVM_TMP=/tmp/<%= @tomcat %>-tmp
 
 if [ `id -u` -ne 0 ]; then
 	echo "You need root privileges to run this script"
