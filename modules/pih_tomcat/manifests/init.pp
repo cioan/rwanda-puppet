@@ -15,16 +15,16 @@ class pih_tomcat (
   $tomcat_user_home_dir="/home/${tomcat}"
   $java_home = $pih_java::java_home
   $version = '6.0.36'
-  $tomcat_zip = 'apache-tomcat-${version}.tar.gz'
+  $tomcat_zip = "apache-tomcat-${version}.tar.gz"
   
   $tomcat_parent = "/usr/share"
   $dest_tomcat_zip = "/tmp/${tomcat_zip}"
   
   $tomcat_home = "${tomcat_parent}/apache-${tomcat}-${version}"
   $cleanup_script = "${tomcat_home}/bin/cleanup.sh"
-  $conf_server_xml = "${tomcat_home}/conf/server.xml"
 
   $tomcat_base = "/var/lib/${tomcat}"
+  $conf_server_xml = "${tomcat_base}/conf/server.xml"
   $policy_d_zip = 'policy.d.tar.gz'
   $dest_policy_d_zip = "${tomcat_base}/conf/${policy_d_zip}"
   
