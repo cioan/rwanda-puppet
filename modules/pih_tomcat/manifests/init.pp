@@ -18,7 +18,7 @@ class pih_tomcat (
   $tomcat_zip = 'apache-tomcat-${version}.tar.gz'
   
   $tomcat_parent = "/usr/share"
-  $dest_tomcat_zip = "${tomcat_parent}/apache-${tomcat}-${version}.tar.gz"
+  $dest_tomcat_zip = "/tmp/${tomcat_zip}"
   
   $tomcat_home = "${tomcat_parent}/apache-${tomcat}-${version}"
   $cleanup_script = "${tomcat_home}/bin/cleanup.sh"
@@ -50,8 +50,14 @@ class pih_tomcat (
   } -> 
 
   exec { 'tomcat-unzip':
-    cwd     => $tomcat_parent,
+    cwd     => "/tmp/",
     command => "tar --group=${tomcat} --owner=${tomcat} -xzf ${dest_tomcat_zip}",
+    unless  => "test -d ${tomcat_home}",   
+  } ->
+
+  exec { 'move-to-tomcat-home':
+    cwd     => "/tmp/",
+    command => "mv apache-tomcat-${version} ${tomcat_home}",
     unless  => "test -d ${tomcat_home}",   
   } ->
 
