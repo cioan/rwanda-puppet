@@ -3,7 +3,7 @@ class pih_tomcat (
     $tomcat_port = hiera('tomcat_port'),
     $tomcat_ssl_port = hiera('tomcat_ssl_port'),
     $tomcat_shutdown_port = hiera('tomcat_shutdown_port'),
-    $tomcat_ajp_port = hiera('tomcat_shutdown_port'),    
+    $tomcat_ajp_port = hiera('tomcat_ajp_port'),    
     $services_enable = hiera('services_enable'),
     $java_memory_parameters = hiera('java_memory_parameters'),
     $java_profiler = hiera('java_profiler'),

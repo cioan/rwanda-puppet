@@ -8,7 +8,7 @@ java_profiler: ''
 tomcat_home: '/usr/share/tomcat6b'
 tomcat_port: 8081
 tomcat_ssl_port: 8441
-tomcat_shutdown_port: 8006
+tomcat_shutdown_port: 8016
 tomcat_ajp_port: 8019
 
 mysql_sys_user_group: mysql
