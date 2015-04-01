@@ -199,14 +199,7 @@ class pih_tomcat (
 
   package { 'sysv-rc-conf' :
     ensure => 'installed'
-  } -> 
-
-  exec { 'cleanup_tomcat':
-    cwd     => "${tomcat_home}/bin",
-    command => "${cleanup_script}",    
-    logoutput => true, 
-    returns   => [0, 1, 2],
-    timeout => 0, 
   } 
+
 
 }
