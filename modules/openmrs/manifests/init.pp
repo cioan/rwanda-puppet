@@ -88,6 +88,12 @@ class openmrs (
     source  => "puppet:///modules/openmrs/${modules_tar}",    
     mode    => '0755',
   } -> 
+  
+  exec { 'delete-modules':
+    cwd     => $openmrs_folder,
+    command => "rm -rf ${openmrs_folder}/modules",
+    onlyif  => "test -d ${openmrs_folder}/modules",   
+  } ->
 
   exec { 'modules-unzip':
     cwd     => $openmrs_folder,

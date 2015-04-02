@@ -1,9 +1,12 @@
 #! /bin/bash
 
 service <%= @tomcat %> stop
-pkill -f <%= @tomcat %>
+echo "tomcat has stopped"
 rm -rf <%= @tomcat_base %>/conf/Catalina/localhost/openmrs.xml
+echo "openmrs.xml deleted"
 rm -rf <%= @tomcat_base %>/logs/*.*
-rm -rf <%= @tomcat_home %>/temp/*
+echo "logs deleted"
 rm -rf <%= @tomcat_base %>/webapps/openmrs
+echo "openmrs webapp deleted"
 rm -rf <%= @tomcat_base %>/work/Catalina
+echo "work Catalina was deleted"
