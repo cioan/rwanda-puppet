@@ -17,16 +17,15 @@ class pih_tomcat (
   $version = '6.0.36'
   $tomcat_zip = "apache-tomcat-${version}.tar.gz"
   
-  $tomcat_parent = "/usr/share"
+  $tomcat_parent = "/usr/local"
   $dest_tomcat_zip = "/tmp/${tomcat_zip}"
   
   $tomcat_home = "${tomcat_parent}/apache-${tomcat}-${version}"
   $cleanup_script = "${tomcat_home}/bin/cleanup.sh"
 
-  $tomcat_base = "/var/lib/${tomcat}"
-  $conf_server_xml = "${tomcat_base}/conf/server.xml"
+  $conf_server_xml = "${tomcat_home}/conf/server.xml"
   $policy_d_zip = 'policy.d.tar.gz'
-  $dest_policy_d_zip = "${tomcat_base}/conf/${policy_d_zip}"
+  $dest_policy_d_zip = "${tomcat_home}/conf/${policy_d_zip}"
   
   notify{"tomcat_home= ${tomcat_home}": }
 
@@ -68,46 +67,6 @@ class pih_tomcat (
     recurse => true,    
   } ->
 
-  file { "${tomcat_base}":
-    ensure  => directory,
-    owner   => $tomcat,
-    group   => $tomcat,
-    mode    => '0755',    
-  } ->
-
-  file { "${tomcat_base}/common":
-    ensure  => directory,
-    owner   => $tomcat,
-    group   => $tomcat,
-    mode    => '0755',    
-    recurse => true,   
-  } ->
-
-  file { "${tomcat_base}/server":
-    ensure  => directory,
-    owner   => $tomcat,
-    group   => $tomcat,
-    mode    => '0755',    
-    recurse => true,   
-  } ->
-
-  file { "${tomcat_base}/shared":
-    ensure  => directory,
-    owner   => $tomcat,
-    group   => $tomcat,
-    mode    => '0755',    
-    recurse => true,   
-  } ->  
-
-  file { "${tomcat_base}/conf":
-    ensure  => directory,
-    owner   => $tomcat,
-    group   => $tomcat,
-    mode    => '0755',    
-    source  => "${tomcat_home}/conf/",
-    recurse => true,   
-  } ->    
-
   file { $dest_policy_d_zip:
     ensure  => file,
     source  => "puppet:///modules/pih_tomcat/${policy_d_zip}",    
@@ -115,12 +74,12 @@ class pih_tomcat (
   } -> 
 
   exec { 'policy-d-unzip':
-    cwd     => "${tomcat_base}/conf",
+    cwd     => "${tomcat_home}/conf",
     command => "tar --group=${tomcat} --owner=${tomcat} -xzf ${dest_policy_d_zip}",
-    unless  => "test -d ${tomcat_base}/conf/policy.d",   
+    unless  => "test -d ${tomcat_home}/conf/policy.d",   
   } ->
 
-  file { "${tomcat_base}/conf/policy.d":
+  file { "${tomcat_home}/conf/policy.d":
     ensure  => directory,
     owner   => $tomcat,
     group   => $tomcat,
@@ -128,7 +87,7 @@ class pih_tomcat (
     recurse => true,   
   } ->  
 
-  file { "${tomcat_base}/logs":
+  file { "${tomcat_home}/logs":
     ensure  => directory,
     owner   => $tomcat,
     group   => $tomcat,
@@ -136,24 +95,6 @@ class pih_tomcat (
     source  => "${tomcat_home}/logs/",
     recurse => true,   
   } ->   
-
-  file { "${tomcat_base}/webapps":
-    ensure  => directory,
-    owner   => $tomcat,
-    group   => $tomcat,
-    mode    => '0755',    
-    source  => "${tomcat_home}/webapps/",
-    recurse => true,   
-  } ->
-
-  file { "${tomcat_base}/work":
-    ensure  => directory,
-    owner   => $tomcat,
-    group   => $tomcat,
-    mode    => '0755',    
-    source  => "${tomcat_home}/work/",
-    recurse => true,   
-  } ->        
 
   file { "${tomcat_parent}/${tomcat}":
     ensure  => 'link',

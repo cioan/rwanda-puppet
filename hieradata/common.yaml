@@ -1,6 +1,6 @@
 sitename: common
 # tomcat: tomcat6
-tomcat: tomcat6b
+tomcat: tomcat6c
 services_enable: true
 java_memory_parameters: '-Xmx512m -Xms512m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:NewSize=128m'
 java_debug_parameters: ''
@@ -12,17 +12,17 @@ java_profiler: ''
 # tomcat_shutdown_port: 8005
 # tomcat_ajp_port: 8009
 tomcat_home: '/usr/share/tomcat6b'
-tomcat_port: 8081
-tomcat_ssl_port: 8441
-tomcat_shutdown_port: 8016
-tomcat_ajp_port: 8019
+tomcat_port: 8083
+tomcat_ssl_port: 8445
+tomcat_shutdown_port: 8017
+tomcat_ajp_port: 8029
 
 mysql_sys_user_group: mysql
 mysql_sys_user_name: mysql
 mysql_root_password: openmrs
 
 # openmrs_db: openmrs
-openmrs_db: openmrs6b
+openmrs_db: openmrs6c
 openmrs_db_user: openmrs
 openmrs_db_password: openmrs
 openmrs_auto_update_database: true
