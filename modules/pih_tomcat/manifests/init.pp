@@ -24,6 +24,8 @@ class pih_tomcat (
   $cleanup_script = "${tomcat_home}/bin/cleanup.sh"
 
   $conf_server_xml = "${tomcat_home}/conf/server.xml"
+  $policy_d_zip = 'policy.d.tar.gz'
+  $dest_policy_d_zip = "${tomcat_home}/conf/${policy_d_zip}"
   
   notify{"tomcat_home= ${tomcat_home}": }
 
@@ -64,6 +66,26 @@ class pih_tomcat (
     group   => $tomcat,
     recurse => true,    
   } ->
+
+  file { $dest_policy_d_zip:
+    ensure  => file,
+    source  => "puppet:///modules/pih_tomcat/${policy_d_zip}",    
+    mode    => '0755',
+  } -> 
+
+  exec { 'policy-d-unzip':
+    cwd     => "${tomcat_home}/conf",
+    command => "tar --group=${tomcat} --owner=${tomcat} -xzf ${dest_policy_d_zip}",
+    unless  => "test -d ${tomcat_home}/conf/policy.d",   
+  } ->
+
+  file { "${tomcat_home}/conf/policy.d":
+    ensure  => directory,
+    owner   => $tomcat,
+    group   => $tomcat,
+    mode    => '0755',        
+    recurse => true,   
+  } ->  
 
   file { "${tomcat_home}/logs":
     ensure  => directory,
