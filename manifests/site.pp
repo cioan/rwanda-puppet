@@ -9,4 +9,5 @@ node default {
   include pih_mysql
   include pih_tomcat
   include openmrs
+  include imb_scripts
 }
