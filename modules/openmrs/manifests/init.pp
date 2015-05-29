@@ -12,7 +12,6 @@ class openmrs (
   require pih_tomcat
 
   $tomcat_home = $pih_tomcat::tomcat_home
-  $tomcat_base = $pih_tomcat::tomcat_base
   $tomcat_user_home_dir = $pih_tomcat::tomcat_user_home_dir
 
   $openmrs_folder = "${tomcat_home}/.OpenMRS"
@@ -26,9 +25,8 @@ class openmrs (
   $openmrs_dump_sql = "${openmrs_db_folder}/openmrs.sql"
   $modules_tar = "modules.tar.gz" 
   $dest_modules_tar = "${openmrs_folder}/${modules_tar}"
-  $dest_openmrs_war = "${tomcat_base}/webapps/openmrs.war"
+  $dest_openmrs_war = "${tomcat_home}/webapps/openmrs.war"
 
-  notify{"tomcat_base= ${tomcat_base}": }
   notify{"tomcat= ${tomcat}": }
 
   file { $openmrs_folder:

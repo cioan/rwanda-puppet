@@ -1,0 +1,22 @@
+#! /bin/bash
+
+TOMCAT_SERVICE=<%= @tomcat %>
+TOMCAT_VERSION=<%= @tomcat_version %>
+TOMCAT_HOME=<%= @tomcat_home %>
+
+service $TOMCAT_SERVICE stop
+service mysql.server stop
+rm -rf /etc/default/$TOMCAT_SERVICE
+rm -rf /etc/init.d/$TOMCAT_SERVICE
+rm -rf /etc/mysql
+rm -rf /etc/init.d/mysql.server
+rm -rf /usr/local/$TOMCAT_SERVICE
+rm -rf $TOMCAT_HOME
+rm -rf /var/lib/$TOMCAT_SERVICE
+rm -rf /usr/share/$TOMCAT_SERVICE
+rm -rf /usr/share/$TOMCAT_VERSION
+rm -rf /usr/share/$TOMCAT_VERSION.tar.gz
+rm -rf /usr/local/mysql
+rm -rf /usr/local/mysql-5.6.15.tar.gz
+userdel $TOMCAT_SERVICE
+rm -rf /home/$TOMCAT_SERVICE
