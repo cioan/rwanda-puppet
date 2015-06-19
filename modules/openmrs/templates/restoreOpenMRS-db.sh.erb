@@ -35,11 +35,11 @@ else
 fi
 
 # delete sync tables from the local server 
-# echo "Delete sync tables"
-# $MYSQL_CLIENT $LOCAL_DB_CREDENTIALS $OPENMRS_DB < $DELETE_SYNC_TABLES_DB_SCRIPT
-# if [ "$?" = "0" ]; then
-#	echo "sync tables have been deleted"
-# else
-#	echo "Failed to delete sync tables" 1>&2
-#	exit 1
-# fi
+echo "Delete sync tables"
+$MYSQL_CLIENT $LOCAL_DB_CREDENTIALS $OPENMRS_DB < $DELETE_SYNC_TABLES_DB_SCRIPT
+if [ "$?" = "0" ]; then
+	echo "sync tables have been deleted"
+else
+	echo "Failed to delete sync tables" 1>&2
+	exit 1
+fi

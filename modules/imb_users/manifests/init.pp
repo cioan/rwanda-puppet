@@ -41,5 +41,13 @@ class imb_users(
 		logoutput => true,    
 		returns   => [0, 1, 2],   
 		timeout => 0,     
+	} ->
+
+	exec { 'add_ekagabo':    
+		cwd     => "/etc/puppet",    
+		command => "${add_user_sh} ekagabo $default_new_user_password",       
+		logoutput => true,    
+		returns   => [0, 1, 2],   
+		timeout => 0,     
 	} 
 }
