@@ -39,6 +39,7 @@ remote_db_server:
 remote_backup_dir: 
 
 default_new_user_password: changeme
+backups_user_password: changeme
 
 # These need to be configured for email
 email_alerts_to: 
