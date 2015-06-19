@@ -1,0 +1,12 @@
+#!/bin/bash
+
+TOMCAT=<%= @tomcat %>
+OPENMRS_FOLDER=<%= openmrs_folder %>
+
+
+# stop tomcat
+service $TOMCAT stop
+mv $OPENMRS_FOLDER/sync/recrd $OPENMRS_FOLDER/sync/old_recrd
+rm -rf $OPENMRS_FOLDER/sync/old_recrd
+# start tomcat
+service $TOMCAT start
