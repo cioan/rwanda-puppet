@@ -46,7 +46,7 @@ class imb_scripts(
 #   --------------------------------
 	cron { 'delete-openmrs-sync-logs':
 		ensure  => present,
-		command => '${deleteSyncLogs_sh} > /dev/null',
+		command => "${deleteSyncLogs_sh} > /dev/null",
 		user    => 'root',
 		hour    => 0,
 		minute  => 3
