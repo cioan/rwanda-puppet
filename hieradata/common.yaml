@@ -6,9 +6,9 @@ java_debug_parameters: ''
 java_profiler: ''
 
 # default tomcat installation
-tomcat: tomcat6
+tomcat: tomcat7
 
-tomcat_home: '/usr/share/tomcat6'
+tomcat_home: '/usr/share/tomcat7'
 tomcat_port: 8080
 tomcat_ssl_port: 8443
 tomcat_shutdown_port: 8005

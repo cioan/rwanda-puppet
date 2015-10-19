@@ -84,30 +84,15 @@ class pih_tomcat (
     mode    => '0755',    
   } ->
 
-  file { "${tomcat_base}/common":
+  file { "${tomcat_base}/bin":
     ensure  => directory,
     owner   => $tomcat,
     group   => $tomcat,
-    mode    => '0755',    
-    recurse => true,   
+    mode    => '0755',
+    source  => "${tomcat_home}/bin/",
+    recurse => true,
   } ->
-
-  file { "${tomcat_base}/server":
-    ensure  => directory,
-    owner   => $tomcat,
-    group   => $tomcat,
-    mode    => '0755',    
-    recurse => true,   
-  } ->
-
-  file { "${tomcat_base}/shared":
-    ensure  => directory,
-    owner   => $tomcat,
-    group   => $tomcat,
-    mode    => '0755',    
-    recurse => true,   
-  } ->  
-
+  
   file { "${tomcat_base}/conf":
     ensure  => directory,
     owner   => $tomcat,
@@ -117,25 +102,14 @@ class pih_tomcat (
     recurse => true,   
   } ->    
 
-  file { $dest_policy_d_zip:
-    ensure  => file,
-    source  => "puppet:///modules/pih_tomcat/${policy_d_zip}",    
-    mode    => '0755',
-  } -> 
-
-  exec { 'policy-d-unzip':
-    cwd     => "${tomcat_base}/conf",
-    command => "tar --group=${tomcat} --owner=${tomcat} -xzf ${dest_policy_d_zip}",
-    unless  => "test -d ${tomcat_base}/conf/policy.d",   
-  } ->
-
-  file { "${tomcat_base}/conf/policy.d":
+  file { "${tomcat_base}/lib":
     ensure  => directory,
     owner   => $tomcat,
     group   => $tomcat,
-    mode    => '0755',        
-    recurse => true,   
-  } ->  
+    mode    => '0755',
+    source  => "${tomcat_home}/lib/",
+    recurse => true,
+  } ->
 
   file { "${tomcat_base}/logs":
     ensure  => directory,

@@ -7,7 +7,7 @@ class openmrs (
     $tomcat = hiera('tomcat'),    
   ){
 
-  require pih_java
+  require pih_java::java_7
   require pih_mysql
   require pih_tomcat
 

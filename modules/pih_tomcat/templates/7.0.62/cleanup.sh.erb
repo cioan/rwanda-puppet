@@ -1,0 +1,14 @@
+#! /bin/bash
+
+service <%= @tomcat %> stop
+echo "tomcat has stopped"
+rm -rf <%= @tomcat_base %>/conf/Catalina/localhost/openmrs.xml
+echo "openmrs.xml deleted"
+rm -rf <%= @tomcat_base %>/logs/*.*
+echo "logs deleted"
+rm -rf <%= @tomcat_base %>/webapps/openmrs
+echo "openmrs webapp deleted"
+rm -rf <%= @tomcat_base %>/webapps/openmrs.war
+echo "openmrs war deleted"
+rm -rf <%= @tomcat_base %>/work/Catalina
+echo "work Catalina was deleted"

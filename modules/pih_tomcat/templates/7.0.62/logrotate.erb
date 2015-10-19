@@ -1,0 +1,13 @@
+<%= @tomcat_home %>/logs/catalina.out  {
+  daily
+  rotate 7
+  size 10M
+  copytruncate
+  compress
+  postrotate
+    # reset ownership to comply with directory's permissions
+    chown <%= @tomcat %>.<%= @tomcat_home %> <%= @tomcat_home %>/logs/catalina.out.*
+  endscript
+  notifempty
+  missingok
+}
