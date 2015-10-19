@@ -7,6 +7,7 @@ java_profiler: ''
 
 # default tomcat installation
 tomcat: tomcat6
+
 tomcat_home: '/usr/share/tomcat6'
 tomcat_port: 8080
 tomcat_ssl_port: 8443

@@ -10,11 +10,20 @@ class pih_tomcat (
     $java_debug_parameters = hiera('java_debug_parameters'),
   ){
 
-  require pih_java
+  require pih_java::java_7
+  case $tomcat {
+    tomcat6: {
+        $version = '6.0.36'
+        $java_home = $pih_java::java_7::java_home        
+    }
+    tomcat7: {
+        $version = '7.0.62'   
+        $java_home = $pih_java::java_7::java_home             
+    }
+  }
 
   $tomcat_user_home_dir="/home/${tomcat}"
-  $java_home = $pih_java::java_home
-  $version = '6.0.36'
+ 
   $tomcat_zip = "apache-tomcat-${version}.tar.gz"
   
   $tomcat_parent = "/usr/share"
@@ -164,13 +173,13 @@ class pih_tomcat (
   
   file { $cleanup_script:
     ensure  => file,
-    content => template("pih_tomcat/cleanup.sh.erb"),
+    content => template("pih_tomcat/${version}/cleanup.sh.erb"),
     mode    => '0755',
   } -> 
 
   file { $conf_server_xml:
     ensure  => file,
-    content => template("pih_tomcat/server.xml.erb"),
+    content => template("pih_tomcat/${version}/server.xml.erb"),
     owner   => $tomcat,
     group   => $tomcat,   
     mode    => '0600',
@@ -179,17 +188,17 @@ class pih_tomcat (
   file { "/etc/init.d/${tomcat}":
     ensure  => file,
     mode    => '0755',
-    content => template("pih_tomcat/init.erb")
+    content => template("pih_tomcat/${version}/init.erb")
   } ->
 
   file { "/etc/default/${tomcat}":
     ensure  => file,
-    content => template("pih_tomcat/default.erb")
+    content => template("pih_tomcat/${version}/default.erb")
   } ->
 
   file { "/etc/logrotate.d/${tomcat}":
     ensure  => file,    
-    content => template("pih_tomcat/logrotate.erb"),
+    content => template("pih_tomcat/${version}/logrotate.erb"),
   } ->
   
   service { $tomcat:

@@ -5,8 +5,6 @@ notify{"hostname= ${hostname}": }
 
 node default {
     
-  include pih_java
-  include pih_mysql
+  include pih_java::java_7
   include pih_tomcat
-  include openmrs
 }
